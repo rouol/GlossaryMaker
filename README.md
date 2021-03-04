@@ -5,6 +5,7 @@ By default it will provide translations in Russian, but you can change it in the
 
 All the code needed located in main.py scrypt, hook-build needed only for executable compiling with PyInstaller, and if you will, don't forget to add ` --additional-hooks-dir "C:/Code/PYTHON/GlossaryMaker"` to your build request.
 Althrough, there is an exe executable file, so you can directly launch it from windows, no compilation needed.
+textDivider.py is just a tool to quickly decompose text to separate unique words.
 
 The run process is straight forward.
 When you'll launch an app, it will suggest you to enter words, separated by endlines and when you finish you'll just need to double enter.
