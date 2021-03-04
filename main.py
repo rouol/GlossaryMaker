@@ -12,53 +12,26 @@ import time
 import pandas as pd
 from tqdm import tqdm
 
-'''
-from wordnik.swagger import ApiClient
-apiUrl = 'http://api.wordnik.com/v4'
-apiKey = 'YOUR API KEY HERE'
-client = ApiClient(apiKey, apiUrl)
-'''
+# TARGET LANGUAGE SETTINGS
+TARGET_LANGUAGE = 'ru'
 
-'''
-# Print iterations progress
-def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
-    # Print New Line on Complete
-    if iteration == total:
-        print()
-'''
 
 def getRow(word):
-    # global i, number_of_words
+    global TARGET_LANGUAGE
     try:
         transcrypt = ipa.convert(word)
         try:
             translator = google_translator()
-            translation = translator.translate(word, lang_tgt='ru')
+            translation = translator.translate(word, lang_tgt=TARGET_LANGUAGE)
         except:
             try:
-                translation = translators.deepl(word, from_language='en', to_language='ru')
+                translation = translators.deepl(word, from_language='en', to_language=TARGET_LANGUAGE)
             except:
                 try:
-                    translation = translators.bing(word, from_language='en', to_language='ru')
+                    translation = translators.bing(word, from_language='en', to_language=TARGET_LANGUAGE)
                 except:
                     try:
-                        translation = translators.baidu(word, from_language='en', to_language='ru')
+                        translation = translators.baidu(word, from_language='en', to_language=TARGET_LANGUAGE)
                     except:
                         translation = 'not available'
         try:
@@ -96,12 +69,7 @@ while inp != '':
     inp = input()
 
 print('processing, please wait...')
-'''
-number_of_words = len(words)
-# Initial call to print 0% progress
-printProgressBar(0, number_of_words, prefix='Progress:', suffix='Complete', length=50)
-i = 0
-'''
+
 start = time.time()
 
 data = {
@@ -112,23 +80,6 @@ data = {
 }
 df = pd.DataFrame(data)
 
-'''
-with ThreadPoolExecutor(max_workers=12) as executor:
-    for res in executor.map(getRow, words):
-        try:
-            df = df.append(res, ignore_index=True)
-        except:
-            pass
-'''
-'''
-with ThreadPoolExecutor(max_workers=12) as executor:
-    futures = [executor.submit(getRow, word) for word in words]
-
-for future in as_completed(futures):
-    df = df.append(future.result(), ignore_index=True)
-    # printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
-    # i += 1
-'''
 with ThreadPoolExecutor(max_workers=20) as executor:
     results = list(tqdm(executor.map(getRow, words), total=len(words)))
 
